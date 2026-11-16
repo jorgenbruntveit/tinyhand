@@ -114,7 +114,7 @@ enum Preferences {
 
     static let trailDelayRange: ClosedRange<Double> = 0.2...2
 
-    /// Seconds from the start of a line until the trail starts erasing it.
+    /// Seconds from releasing a line until the trail starts erasing it.
     static var trailDelay: Double {
         get { defaults.object(forKey: "trailDelay") as? Double ?? 0.6 }
         set { set(newValue, "trailDelay") }

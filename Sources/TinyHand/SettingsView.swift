@@ -1010,7 +1010,7 @@ private struct DrawingPage: View {
                 .focusable(false)
             }
             if Preferences.fadeSeconds < 0 {
-                Row("Erasing starts", detail: "Counted from the start of each line.") {
+                Row("Erasing starts", detail: "Counted from when you let go.") {
                     HStack(spacing: 10) {
                         Slider(value: model.binding({ Preferences.trailDelay }, { Preferences.trailDelay = ($0 * 10).rounded() / 10 }),
                                in: Preferences.trailDelayRange)

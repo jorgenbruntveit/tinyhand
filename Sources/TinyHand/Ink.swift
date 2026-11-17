@@ -4,40 +4,12 @@ final class Ink {
     let layer = CALayer()
     var keep: Bool { Preferences.fadeSeconds == 0 }
 
-    // With the trail setting, an eraser follows each line from its start at a steady speed, so
-    // long lines take longer to go than short ones. It starts `trailDelay` after the line begins
-    // and never erases what was drawn within that time.
+    // With the trail setting, nothing is erased while you hold the button. When you let go, an
+    // eraser waits `trailDelay`, then follows the line from its start at a steady speed, so long
+    // lines take longer to go than short ones.
     private var trailing: Bool { Preferences.fadeSeconds < 0 }
     private var trailDelay: CFTimeInterval { Preferences.trailDelay }
     private var eraseSpeed: CGFloat { CGFloat(Preferences.trailSpeed) }
-
-    private final class Trail {
-        let layer: CAShapeLayer
-        let start: CFTimeInterval
-        var last: CGPoint
-        var length: CGFloat = 0
-        var times: [CFTimeInterval] = []
-        var distances: [CGFloat] = []
-        var erased: CGFloat = 0
-
-        init(layer: CAShapeLayer, at point: CGPoint, time: CFTimeInterval) {
-            self.layer = layer
-            start = time
-            last = point
-            times = [time]
-            distances = [0]
-        }
-
-        func add(_ point: CGPoint, at time: CFTimeInterval) {
-            length += hypot(point.x - last.x, point.y - last.y)
-            last = point
-            times.append(time)
-            distances.append(length)
-        }
-    }
-    private var live: Trail?
-    private var trailTimer: Timer?
-    private var lastStep: CFTimeInterval = 0
 
     static let purple = CGColor(srgbRed: 0.53, green: 0.33, blue: 0.95, alpha: 1)
     static let red = CGColor(srgbRed: 1.0, green: 0.16, blue: 0.12, alpha: 1)
@@ -82,10 +54,6 @@ final class Ink {
         layer.addSublayer(s)
         stroke = s
         points = [point]
-        if trailing {
-            live = Trail(layer: s, at: point, time: CACurrentMediaTime())
-            startTrailTimer()
-        }
         redraw()
     }
 
@@ -97,7 +65,6 @@ final class Ink {
             return
         }
         points.append(point)
-        live?.add(point, at: CACurrentMediaTime())
         redraw()
     }
 
@@ -106,13 +73,11 @@ final class Ink {
             return
         }
         stroke = nil
-        let headLength = self.headLength(s)
+        let length = lineLength() + headLength(s)
         points = []
         arrow = false
-        if let t = live {
-            live = nil
-            stopTrailTimer()
-            finish(t, headLength: headLength)
+        if trailing {
+            erase(s, length: length)
             return
         }
         freeze(s)
@@ -125,67 +90,29 @@ final class Ink {
     func clear() {
         stroke = nil
         points = []
-        live = nil
-        stopTrailTimer()
         layer.sublayers?.forEach { $0.removeFromSuperlayer() }
     }
 
-    private func startTrailTimer() {
-        stopTrailTimer()
-        lastStep = CACurrentMediaTime()
-        let timer = Timer(timeInterval: 1.0 / 120, repeats: true) { [weak self] _ in
-            self?.stepLiveTrail()
-        }
-        RunLoop.main.add(timer, forMode: .common)
-        trailTimer = timer
+    private func lineLength() -> CGFloat {
+        zip(points, points.dropFirst()).reduce(0) { $0 + hypot($1.1.x - $1.0.x, $1.1.y - $1.0.y) }
     }
 
-    private func stopTrailTimer() {
-        trailTimer?.invalidate()
-        trailTimer = nil
-    }
-
-    // Moves the eraser along the line being drawn, keeping clear of the part drawn most recently.
-    private func stepLiveTrail() {
-        let now = CACurrentMediaTime()
-        let step = eraseSpeed * CGFloat(now - lastStep)
-        lastStep = now
-        guard let t = live, now - t.start >= trailDelay else {
-            return
-        }
-        let limit = t.times.lastIndex { $0 <= now - trailDelay }.map { t.distances[$0] } ?? 0
-        t.erased = min(t.erased + step, max(t.erased, limit))
-        setStrokeStart(t)
-    }
-
-    private func setStrokeStart(_ t: Trail) {
-        let total = t.length + headLength(t.layer)
+    // Erases the finished line from its start, `trailDelay` after release, at a steady speed.
+    private func erase(_ s: CAShapeLayer, length: CGFloat) {
+        let duration = max(0.05, CFTimeInterval(length / eraseSpeed))
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        t.layer.strokeStart = total > 0 ? min(1, t.erased / total) : 0
-        CATransaction.commit()
-    }
-
-    // Once the line is finished, the rest of the erasing runs as one animation at the same speed.
-    private func finish(_ t: Trail, headLength: CGFloat) {
-        let now = CACurrentMediaTime()
-        let wait = max(0, t.start + trailDelay - now)
-        let total = t.length + headLength
-        let from = total > 0 ? min(1, t.erased / total) : 0
-        let duration = max(0.05, CFTimeInterval((total - t.erased) / eraseSpeed))
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        t.layer.strokeStart = 1
+        s.strokeStart = 1
         CATransaction.commit()
         let anim = CABasicAnimation(keyPath: "strokeStart")
-        anim.fromValue = from
+        anim.fromValue = 0
         anim.toValue = 1
-        anim.beginTime = now + wait
+        anim.beginTime = CACurrentMediaTime() + trailDelay
         anim.duration = duration
         anim.timingFunction = CAMediaTimingFunction(name: .linear)
         anim.fillMode = .backwards
-        t.layer.add(anim, forKey: "trail")
-        DispatchQueue.main.asyncAfter(deadline: .now() + wait + duration) { [weak s = t.layer] in
+        s.add(anim, forKey: "trail")
+        DispatchQueue.main.asyncAfter(deadline: .now() + trailDelay + duration) { [weak s] in
             s?.removeFromSuperlayer()
         }
     }

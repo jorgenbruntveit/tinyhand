@@ -40,7 +40,7 @@ again. In this mode Esc doesn't turn the pointer off, and the pointer comes back
 or Settings. Turn on **Turn the pointer on when TinyHand opens** to have the hand from login.
 
 You can also turn on a small toolbar at the bottom of the screen in **Settings → Pointers**. It
-lets you pick one of 37 hands or a laser dot, mute the tap sound, or exit while you present.
+lets you pick one of 38 hands or a laser dot, mute the tap sound, or exit while you present.
 
 ## Automation
 

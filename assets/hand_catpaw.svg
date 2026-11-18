@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <rect x="479.0" y="596.8" width="66" height="883.2" rx="33.0" fill="#211e1b"/>
+  <g transform="translate(281.6 100.0) scale(3.6) translate(-17.0 -2.0)">
+  <defs><clipPath id="paw-outline"><path d="M57 144 C37 138 26 117 24 91 C22 75 25 59 38 56 C38 40 47 29 60 32 C66 19 81 16 92 31 C105 25 118 35 119 53 C135 55 141 68 138 90 C136 113 126 130 105 141 C91 150 73 151 57 144 Z"/></clipPath></defs>
+  <g stroke-linecap="round" stroke-linejoin="round">
+  <path d="M57 144 C37 138 26 117 24 91 C22 75 25 59 38 56 C38 40 47 29 60 32 C66 19 81 16 92 31 C105 25 118 35 119 53 C135 55 141 68 138 90 C136 113 126 130 105 141 C91 150 73 151 57 144 Z" fill="#fffdf7" stroke="#211e1b" stroke-width="4.6"/>
+  <path d="M72 26 C75 21 80 13 81 9 C87 13 90 22 88 29 C83 26 78 24 72 26 Z" fill="#fffdf7" stroke="#211e1b" stroke-width="3.6"/>
+  <path d="M38 56 Q53 58 58 82 M60 32 C71 34 77 48 76 79 M92 31 Q105 47 97 81 M119 53 Q123 67 115 85" fill="none" stroke="#211e1b" stroke-width="4"/>
+  <path d="M25 103 C40 96 42 87 50 91 C58 94 55 108 65 108 C75 108 78 102 87 107 C96 112 101 122 120 126 L130 127 L132 155 L22 155 Z" clip-path="url(#paw-outline)" fill="#211e1b"/>
+  <path d="M138 74 C131 71 124 74 123 81 C121 88 128 89 126 95 C123 101 126 108 131 108 C136 99 139 84 138 74 Z" fill="#211e1b"/>
+  </g>
+</g>
+</svg>

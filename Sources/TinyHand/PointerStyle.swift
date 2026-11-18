@@ -25,6 +25,7 @@ struct PointerStyle: Hashable {
     private static let builtIn: [(id: String, title: String, ink: CGColor)] = [
         ("lavender", "Lavender toy", Ink.purple),
         ("outline", "Cartoon", Ink.red),
+        ("catpaw", "Cat paw", Ink.hex(0xF0561D)),
         ("glove", "Cursor glove", Ink.purple),
         ("coral", "Coral vinyl", Ink.red),
         ("plush", "Plush", Ink.hex(0x2F86F0)),
@@ -324,7 +325,7 @@ struct HandAsset {
         )
     }
 
-    private static func loadImage(_ name: String) -> CGImage? {
+    static func loadImage(_ name: String) -> CGImage? {
         let exeDir = URL(fileURLWithPath: CommandLine.arguments[0]).deletingLastPathComponent()
         var urls: [URL] = []
         urls.append(CustomHands.directory.appendingPathComponent("\(name).png"))

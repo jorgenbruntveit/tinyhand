@@ -572,7 +572,9 @@ final class OverlayController {
         let through = inputTap.clickThrough
         presenting = keyHeld == through && !inputTap.interactPressing
         let overCover = coverRects.contains { $0.contains(cgMouse) }
-        let normal = overCover || (!drawing && !Preferences.interactKeepsHand && ((interacting && !through) || overMenu || ownMenuOpen))
+        // In pointer mode the hand is the cursor, so it stays over the menu bar and menus, right-click ones too.
+        let keepHand = Preferences.interactKeepsHand || Preferences.pointerMode
+        let normal = overCover || (!drawing && !keepHand && ((interacting && !through) || overMenu || ownMenuOpen))
         setEscEnabled(menuRects.isEmpty && !ownMenuOpen && !through)
 
         if normal != normalCursor {

@@ -425,7 +425,7 @@ private struct GeneralPage: View {
             }
             Card(title: "Clicks") {
                 Row("When the pointer is on", detail: Preferences.pointerMode
-                    ? "The hand is your cursor and clicks work as usual. It comes back after sleep, a lock or Settings, and Esc doesn't turn it off."
+                    ? "The hand is your cursor, over menus too, and clicks work as usual. It comes back after sleep, a lock or Settings, and Esc doesn't turn it off."
                     : "Clicks tap and dragging draws. Nothing underneath gets clicked.") {
                     Picker("", selection: model.binding({ Preferences.pointerMode }, { Preferences.pointerMode = $0 })) {
                         Text("Tap and draw").tag(false)

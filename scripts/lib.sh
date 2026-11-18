@@ -33,7 +33,7 @@ make_bundle() {
     rm -rf "$app"
     mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
     cp "$binary" "$app/Contents/MacOS/$APP_NAME"
-    cp "$ROOT"/assets/hand_*.png "$app/Contents/Resources/"
+    cp "$ROOT"/assets/hand_*.png "$ROOT"/assets/burst_*.png "$app/Contents/Resources/"
     cp "$ROOT"/assets/sounds/tap_*.wav "$ROOT/assets/AppIcon.icns" "$ROOT/assets/Assets.car" "$app/Contents/Resources/"
     cp "$ROOT"/assets/menubar_*.png "$app/Contents/Resources/"
 

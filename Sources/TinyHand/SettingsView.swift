@@ -976,7 +976,7 @@ private struct AppearancePage: View {
                 .fixedSize()
                 .focusable(false)
             }
-            Row("Burst on each tap", detail: "Short lines in the ink colour flash out from the fingertip.") {
+            Row("Burst on each tap", detail: "A cartoon burst flashes at the fingertip. Quick repeated taps build it up.") {
                 Toggle("", isOn: model.binding({ Preferences.tapBurst }, { Preferences.tapBurst = $0 }))
                     .toggleStyle(.switch).labelsHidden().focusable(false)
             }

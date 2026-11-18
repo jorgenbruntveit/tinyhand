@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 160 160">
+  <g stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(80 80) rotate(-125)">
+  <path d="M24 0 Q27 -4 65 1.1999999999999997 Q73 2.3 69 3.4 Q31 4 24 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-100)">
+  <path d="M35 0 Q38 -2.8 50 -3.4 Q58 -2.3 54 -1.1999999999999997 Q42 2.8 35 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-83)">
+  <path d="M20 0 Q23 -4.4 67 1.1999999999999997 Q75 2.3 71 3.4 Q27 4.4 20 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-56)">
+  <path d="M29 0 Q32 -3.4 54 -3.4 Q62 -2.3 58 -1.1999999999999997 Q36 3.4 29 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-36)">
+  <path d="M20 0 Q23 -4 68 1.1999999999999997 Q76 2.3 72 3.4 Q27 4 20 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-14)">
+  <path d="M33 0 Q36 -2.3 50 -3.4 Q58 -2.3 54 -1.1999999999999997 Q40 2.3 33 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(4)">
+  <path d="M24 0 Q27 -4.4 67 1.1999999999999997 Q75 2.3 71 3.4 Q31 4.4 24 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(23)">
+  <path d="M31 0 Q34 -3 51 -3.4 Q59 -2.3 55 -1.1999999999999997 Q38 3 31 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(42)">
+  <path d="M22 0 Q25 -4.6 67 1.1999999999999997 Q75 2.3 71 3.4 Q29 4.6 22 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(67)">
+  <path d="M35 0 Q38 -2.6 52 -3.4 Q60 -2.3 56 -1.1999999999999997 Q42 2.6 35 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(88)">
+  <path d="M20 0 Q23 -4.2 66 1.1999999999999997 Q74 2.3 70 3.4 Q27 4.2 20 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(111)">
+  <path d="M30 0 Q33 -3.2 56 -3.4 Q64 -2.3 60 -1.1999999999999997 Q37 3.2 30 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(134)">
+  <path d="M23 0 Q26 -4.6 68 1.1999999999999997 Q76 2.3 72 3.4 Q30 4.6 23 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(151)">
+  <path d="M34 0 Q37 -2.6 48 -3.4 Q56 -2.3 52 -1.1999999999999997 Q41 2.6 34 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(173)">
+  <path d="M22 0 Q25 -4 66 1.1999999999999997 Q74 2.3 70 3.4 Q29 4 22 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(197)">
+  <path d="M29 0 Q32 -2.8 48 -3.4 Q56 -2.3 52 -1.1999999999999997 Q36 2.8 29 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(218)">
+  <path d="M26 0 Q29 -3.6 61 1.1999999999999997 Q69 2.3 65 3.4 Q33 3.6 26 0 Z" fill="#211e1b"/>
+  </g>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 160 160">
+  <g stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(16 16) scale(.8)">
+  <path d="M9 70 Q31 67 35 56 Q40 46 29 33 Q51 45 59 40 Q68 33 66 14 Q81 35 91 34 Q101 33 113 13 Q110 36 120 42 Q127 47 143 37 Q137 52 142 60 Q147 68 152 70 Q134 81 135 88 Q136 96 149 110 Q128 103 121 112 Q114 121 120 138 Q101 125 94 129 Q87 134 84 151 Q70 132 63 130 Q53 127 37 144 Q42 122 35 116 Q27 108 11 114 Q26 96 24 89 Q22 81 9 70 Z" fill="#211e1b" stroke="#211e1b" stroke-width="1.5"/>
+  <path d="M9 70 Q31 67 35 56 Q40 46 29 33 Q51 45 59 40 Q68 33 66 14 Q81 35 91 34 Q101 33 113 13 Q110 36 120 42 Q127 47 143 37 Q137 52 142 60 Q147 68 152 70 Q134 81 135 88 Q136 96 149 110 Q128 103 121 112 Q114 121 120 138 Q101 125 94 129 Q87 134 84 151 Q70 132 63 130 Q53 127 37 144 Q42 122 35 116 Q27 108 11 114 Q26 96 24 89 Q22 81 9 70 Z" transform="translate(14 15) scale(.82)" fill="#fffdf7"/>
+  </g>
+  <g transform="translate(80 80) rotate(-106)">
+  <path d="M62 0 C64.97 -1.9 71.24 0.3 73 0.87 C71.24 1.44 64.97 1.9 62 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-81)">
+  <path d="M62 0 C65.24 -1.9 72.08 -1.44 74 -0.87 C72.08 -0.3 65.24 1.9 62 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-49)">
+  <path d="M57 0 C59.7 -1.5 65.4 0.3 67 0.87 C65.4 1.44 59.7 1.5 57 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(-18)">
+  <path d="M62 0 C64.97 -1.7 71.24 -1.44 73 -0.87 C71.24 -0.3 64.97 1.7 62 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(8)">
+  <path d="M64 0 C66.97 -2.1 73.24 0.3 75 0.87 C73.24 1.44 66.97 2.1 64 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(39)">
+  <path d="M59 0 C62.24 -1.8 69.08 -1.44 71 -0.87 C69.08 -0.3 62.24 1.8 59 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(66)">
+  <path d="M60 0 C63.24 -1.7 70.08 0.3 72 0.87 C70.08 1.44 63.24 1.7 60 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(96)">
+  <path d="M64 0 C66.7 -2 72.4 -1.44 74 -0.87 C72.4 -0.3 66.7 2 64 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(129)">
+  <path d="M60 0 C63.24 -1.6 70.08 0.3 72 0.87 C70.08 1.44 63.24 1.6 60 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(159)">
+  <path d="M62 0 C65.51 -2 72.92 -1.44 75 -0.87 C72.92 -0.3 65.51 2 62 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(194)">
+  <path d="M64 0 C66.97 -1.6 73.24 0.3 75 0.87 C73.24 1.44 66.97 1.6 64 0 Z" fill="#211e1b"/>
+  </g>
+  <g transform="translate(80 80) rotate(224)">
+  <path d="M59 0 C62.24 -1.8 69.08 -1.44 71 -0.87 C69.08 -0.3 62.24 1.8 59 0 Z" fill="#211e1b"/>
+  </g>
+  </g>
+</svg>

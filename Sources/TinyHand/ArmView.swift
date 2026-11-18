@@ -40,7 +40,7 @@ final class ArmView: NSView {
     // Quick repeated taps build up: each one within `streakWindow` of the last goes up a level,
     // to `maxTapLevel`, for a deeper poke and a bigger burst.
     private static let streakWindow: TimeInterval = 0.45
-    private static let maxTapLevel = 3
+    private static let maxTapLevel = 4
     private var tapLevel = 0
     private var lastPressAt = Date.distantPast
     private var burstTurn: CGFloat = 0
@@ -72,10 +72,11 @@ final class ArmView: NSView {
         layer = root
         wantsLayer = true
         root.addSublayer(ink.layer)
+        // Bursts sit behind the hand so the finger stays on top of them.
+        root.addSublayer(burstLayer)
         root.addSublayer(group)
 
         root.addSublayer(dotLayer)
-        root.addSublayer(burstLayer)
         rodFade.colors = [CGColor(gray: 0, alpha: 0), CGColor(gray: 0, alpha: 1)]
 
         group.masksToBounds = false
@@ -137,7 +138,7 @@ final class ArmView: NSView {
         let now = Date()
         tapLevel = now.timeIntervalSince(lastPressAt) < ArmView.streakWindow ? min(tapLevel + 1, ArmView.maxTapLevel) : 0
         lastPressAt = now
-        pressAmount = 1 + 0.3 * CGFloat(tapLevel)
+        pressAmount = 1 + 0.25 * CGFloat(tapLevel)
     }
 
     func aim(cursor: CGPoint) {
@@ -228,68 +229,51 @@ final class ArmView: NSView {
         CATransaction.commit()
     }
 
-    /// Short lines burst out from the fingertip, away from the hand, and fade. Each burst sits at a
-    /// new angle and spins a little; quick repeated taps make it bigger, busier and longer.
+    /// The burst drawings, one per level of quick repeated taps.
+    private static let burstImages: [CGImage] = (1...5).compactMap { HandAsset.loadImage("burst_\($0)") }
+
+    /// A burst flashes out from the fingertip and fades. Each one sits at a new angle and spins a
+    /// little; quick repeated taps step through bigger, busier drawings.
     func burst() {
-        guard let tip = tip else {
+        guard let tip = tip, !ArmView.burstImages.isEmpty else {
             return
         }
-        let level = CGFloat(tapLevel)
+        let level = min(tapLevel, ArmView.burstImages.count - 1)
         let handPts = handLenFrac * bounds.height
-        let radius = handPts * (style == .laser ? 0.22 : 0.34) * (1 + 0.25 * level)
-        let width = max(2, handPts * 0.026) * (1 + 0.18 * level)
-        // Leave a gap where the finger is, pointing back toward the grip.
-        let gap: CGFloat = style == .laser ? 0 : 1.9
-        let back = gripPoint.map { atan2($0.y - tip.y, $0.x - tip.x) } ?? -.pi / 2
-        let count = (style == .laser ? 10 : 8) + 2 * tapLevel
-        let span = 2 * .pi - gap
-        burstTurn = tapLevel == 0 ? CGFloat.random(in: 0..<1) : (burstTurn + 0.38).truncatingRemainder(dividingBy: 1)
-        let path = CGMutablePath()
-        func ray(_ angle: CGFloat, _ inner: CGFloat, _ outer: CGFloat) {
-            path.move(to: CGPoint(x: inner * cos(angle), y: inner * sin(angle)))
-            path.addLine(to: CGPoint(x: outer * cos(angle), y: outer * sin(angle)))
-        }
-        for i in 0..<count {
-            let step = (CGFloat(i) + (gap == 0 ? burstTurn : 0.25 + 0.5 * burstTurn)) / CGFloat(count)
-            let angle = back + gap / 2 + span * step + CGFloat.random(in: -0.08...0.08)
-            ray(angle, radius * CGFloat.random(in: 0.5...0.62), radius * CGFloat.random(in: 0.88...1.06))
-            // From the third quick tap, short ticks fill in further out between the main lines.
-            if tapLevel >= 2 && (gap == 0 || i < count - 1) {
-                let between = angle + span / CGFloat(count) / 2
-                ray(between, radius * 1.08, radius * CGFloat.random(in: 1.22...1.32))
-            }
-        }
+        let side = handPts * (style == .laser ? 0.7 : 1.05) * (1 + 0.16 * CGFloat(level))
+        burstTurn = level == 0 ? CGFloat.random(in: 0..<(2 * .pi)) : burstTurn + 0.9
 
-        let lines = CAShapeLayer()
-        lines.path = path
-        lines.fillColor = nil
-        lines.strokeColor = ink.color
-        lines.lineWidth = width
-        lines.lineCap = .round
-        lines.position = tip
-        lines.opacity = 0
+        let flash = CALayer()
+        flash.contents = ArmView.burstImages[level]
+        flash.contentsScale = window?.backingScaleFactor ?? 2
+        flash.bounds = CGRect(x: 0, y: 0, width: side, height: side)
+        flash.position = tip
+        flash.transform = CATransform3DMakeRotation(burstTurn, 0, 0, 1)
+        flash.opacity = 0
+        // A soft light edge keeps the dark ink readable on dark screens.
+        flash.shadowColor = CGColor(gray: 1, alpha: 1)
+        flash.shadowOpacity = 0.55
+        flash.shadowRadius = 1.5
+        flash.shadowOffset = .zero
 
         let grow = CABasicAnimation(keyPath: "transform.scale")
-        grow.fromValue = 0.6
-        grow.toValue = 1.35 + 0.12 * level
+        grow.fromValue = 0.55
+        grow.toValue = 1.15 + 0.08 * CGFloat(level)
         let spin = CABasicAnimation(keyPath: "transform.rotation.z")
-        spin.fromValue = 0
-        spin.toValue = (tapLevel % 2 == 0 ? 1 : -1) * (0.22 + 0.08 * level)
-        let thin = CABasicAnimation(keyPath: "lineWidth")
-        thin.fromValue = width
-        thin.toValue = width * 0.45
+        spin.fromValue = burstTurn
+        spin.toValue = burstTurn + (level % 2 == 0 ? 1 : -1) * (0.2 + 0.07 * CGFloat(level))
         let fade = CAKeyframeAnimation(keyPath: "opacity")
         fade.values = [1, 1, 0]
-        fade.keyTimes = [0, 0.45, 1]
+        fade.keyTimes = [0, 0.5, 1]
         let group = CAAnimationGroup()
-        group.animations = [grow, spin, thin, fade]
-        group.duration = 0.28 + 0.05 * Double(tapLevel)
+        group.animations = [grow, spin, fade]
+        group.duration = 0.26 + 0.05 * Double(level)
         group.timingFunction = CAMediaTimingFunction(name: .easeOut)
 
         CATransaction.begin()
-        CATransaction.setCompletionBlock { lines.removeFromSuperlayer() }
-        burstLayer.addSublayer(lines)
-        lines.add(group, forKey: "burst")
+        CATransaction.setCompletionBlock { flash.removeFromSuperlayer() }
+        burstLayer.addSublayer(flash)
+        flash.add(group, forKey: "burst")
         CATransaction.commit()
     }
 

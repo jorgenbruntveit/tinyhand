@@ -198,6 +198,7 @@ final class SettingsModel: ObservableObject {
             previewSound = TapSound(choice)
         }
         previewSound?.load(choice)
+        previewSound?.setVolume(Float(Preferences.tapVolume))
         previewSound?.play()
     }
 
@@ -1114,6 +1115,25 @@ private struct SoundPage: View {
                     .padding(.horizontal, 4)
             }
             Card(title: nil) {
+                Row("Volume") {
+                    HStack(spacing: 10) {
+                        Image(systemName: "speaker.fill").font(.system(size: 10)).foregroundColor(.secondary)
+                        Slider(value: model.binding({ Preferences.tapVolume }, { Preferences.tapVolume = $0 }), in: 0.05...1) { editing in
+                            if !editing {
+                                model.preview(Preferences.tapSound)
+                            }
+                        }
+                        .frame(width: 180)
+                        .focusable(false)
+                        .disabled(!on)
+                        Image(systemName: "speaker.wave.3.fill").font(.system(size: 12)).foregroundColor(.secondary)
+                    }
+                }
+                Row("Play on clicks that reach the app", detail: "When the hand is showing, like in pointer mode or with click-through.") {
+                    Toggle("", isOn: model.binding({ Preferences.clickSound }, { Preferences.clickSound = $0 }))
+                        .toggleStyle(.switch).labelsHidden().focusable(false)
+                        .disabled(!on)
+                }
                 Row("Laser dot taps too", detail: "Off by default, for quiet pointing.") {
                     Toggle("", isOn: model.binding({ Preferences.laserSound }, { Preferences.laserSound = $0 }))
                         .toggleStyle(.switch).labelsHidden().focusable(false)

@@ -148,6 +148,17 @@ enum Preferences {
         set { set(newValue.rawValue, "tapSound") }
     }
 
+    static var tapVolume: Double {
+        get { defaults.object(forKey: "tapVolume") as? Double ?? 1 }
+        set { set(newValue, "tapVolume") }
+    }
+
+    /// Also play the tap sound for clicks that reach the app while the hand is showing.
+    static var clickSound: Bool {
+        get { defaults.object(forKey: "clickSound") as? Bool ?? true }
+        set { set(newValue, "clickSound") }
+    }
+
     static var laserSound: Bool {
         get { defaults.object(forKey: "sound.laser") as? Bool ?? false }
         set { set(newValue, "sound.laser") }
@@ -234,7 +245,7 @@ enum Preferences {
         for key in ["shortcut.toggle", "shortcut.clear", "pointerSize", "showShadow", "fadeSeconds", "trailDelay", "trailSpeed",
                     "sound.hands", "sound.laser", "interactKey", "interactKeepsHand", "doubleShiftClickThrough", "pinnedStyles",
                     "pointerStyle", "inkChoice", "showInkButton", "showToolbar", "showMenuBarIcon", "tapSound", "pointerMode",
-                    "turnOnAtLaunch", "fadingStick", "tapBurst"] {
+                    "turnOnAtLaunch", "fadingStick", "tapBurst", "tapVolume", "clickSound"] {
             defaults.removeObject(forKey: key)
         }
         NotificationCenter.default.post(name: changed, object: nil)

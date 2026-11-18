@@ -6,12 +6,18 @@ final class ArmView: NSView {
     private let handLayer = CALayer()
     private let dotLayer = CAShapeLayer()
     private let dotCore = CAShapeLayer()
+    private let rodFade = CAGradientLayer()
+    private let burstLayer = CALayer()
 
     private(set) var style: PointerStyle = .lavender
     private var asset: HandAsset?
 
     private var handLenFrac: CGFloat = Preferences.pointerSize
     private var showShadow = Preferences.showShadow
+    private var fadingStick = Preferences.fadingStick
+    // How much of a fading stick shows below the wrist, and how long its fade is, in hand lengths.
+    private let stickShowFrac: CGFloat = 4
+    private let stickFadeFrac: CGFloat = 1.2
     private let minRodFrac: CGFloat = 0.05
     private let gripLeanFrac: CGFloat = 0.30
     private let gripDepthFrac: CGFloat = 0.12
@@ -28,6 +34,8 @@ final class ArmView: NSView {
     private var lastLaserPose: [CGFloat] = []
     private var gripTarget: CGFloat?
     private var displayImageHeight = 0
+    private var tip: CGPoint?
+    private var gripPoint: CGPoint?
 
     var isSettling: Bool {
         if pressAmount > 0.002 {
@@ -59,6 +67,8 @@ final class ArmView: NSView {
         root.addSublayer(group)
 
         root.addSublayer(dotLayer)
+        root.addSublayer(burstLayer)
+        rodFade.colors = [CGColor(gray: 0, alpha: 0), CGColor(gray: 0, alpha: 1)]
 
         group.masksToBounds = false
         group.addSublayer(rodLayer)
@@ -82,6 +92,7 @@ final class ArmView: NSView {
         NotificationCenter.default.addObserver(forName: Preferences.changed, object: nil, queue: .main) { [weak self] _ in
             self?.handLenFrac = Preferences.pointerSize
             self?.showShadow = Preferences.showShadow
+            self?.fadingStick = Preferences.fadingStick
         }
     }
 
@@ -125,6 +136,8 @@ final class ArmView: NSView {
         gripX = gx
         gripTarget = targetX
         let grip = CGPoint(x: gx, y: -gripDepthFrac * screenH)
+        tip = cursor
+        gripPoint = grip
 
         if !held {
             pressAmount += (0 - pressAmount) * 0.18
@@ -164,7 +177,7 @@ final class ArmView: NSView {
             height: sx * sin(-rotation) + sy * cos(-rotation)
         )
 
-        let pose = [rotation, rodLen, handPts, widthPts, grip.x, lift, pressAmount, showShadow ? 1 : 0, a.aspect]
+        let pose = [rotation, rodLen, handPts, widthPts, grip.x, lift, pressAmount, showShadow ? 1 : 0, fadingStick ? 1 : 0, a.aspect]
             .map { ($0 * 100).rounded() }
         guard pose != lastPose else {
             return
@@ -182,6 +195,18 @@ final class ArmView: NSView {
 
         rodLayer.bounds = CGRect(x: 0, y: 0, width: widthPts, height: rodLen)
         rodLayer.position = CGPoint(x: widthPts / 2, y: 0)
+        if fadingStick {
+            // The mask reaches past the rod so its shadow fades with it. Opaque from `solid` up to the wrist.
+            let pad = widthPts
+            let maskH = rodLen + 2 * pad
+            let solid = rodLen + pad - stickShowFrac * handPts
+            rodFade.frame = CGRect(x: -pad, y: -pad, width: widthPts + 2 * pad, height: maskH)
+            rodFade.startPoint = CGPoint(x: 0.5, y: (solid - stickFadeFrac * handPts) / maskH)
+            rodFade.endPoint = CGPoint(x: 0.5, y: solid / maskH)
+            rodLayer.mask = rodFade
+        } else {
+            rodLayer.mask = nil
+        }
         handLayer.bounds = CGRect(x: 0, y: 0, width: widthPts, height: handPts)
         handLayer.position = CGPoint(x: widthPts / 2, y: rodLen)
 
@@ -189,6 +214,59 @@ final class ArmView: NSView {
         group.position = grip
         group.transform = CATransform3DMakeRotation(rotation, 0, 0, 1)
 
+        CATransaction.commit()
+    }
+
+    /// Short lines burst out from the fingertip, away from the hand, and fade.
+    func burst() {
+        guard let tip = tip else {
+            return
+        }
+        let handPts = handLenFrac * bounds.height
+        let radius = handPts * (style == .laser ? 0.22 : 0.34)
+        let width = max(2, handPts * 0.026)
+        // Leave a gap where the finger is, pointing back toward the grip.
+        let gap: CGFloat = style == .laser ? 0 : 1.9
+        let back = gripPoint.map { atan2($0.y - tip.y, $0.x - tip.x) } ?? -.pi / 2
+        let count = style == .laser ? 10 : 8
+        let span = 2 * .pi - gap
+        let path = CGMutablePath()
+        for i in 0..<count {
+            let step = gap == 0 ? CGFloat(i) / CGFloat(count) : (CGFloat(i) + 0.5) / CGFloat(count)
+            let angle = back + gap / 2 + span * step + CGFloat.random(in: -0.1...0.1)
+            let inner = radius * CGFloat.random(in: 0.5...0.62)
+            let outer = radius * CGFloat.random(in: 0.88...1.06)
+            path.move(to: CGPoint(x: inner * cos(angle), y: inner * sin(angle)))
+            path.addLine(to: CGPoint(x: outer * cos(angle), y: outer * sin(angle)))
+        }
+
+        let lines = CAShapeLayer()
+        lines.path = path
+        lines.fillColor = nil
+        lines.strokeColor = ink.color
+        lines.lineWidth = width
+        lines.lineCap = .round
+        lines.position = tip
+        lines.opacity = 0
+
+        let grow = CABasicAnimation(keyPath: "transform.scale")
+        grow.fromValue = 0.6
+        grow.toValue = 1.35
+        let thin = CABasicAnimation(keyPath: "lineWidth")
+        thin.fromValue = width
+        thin.toValue = width * 0.45
+        let fade = CAKeyframeAnimation(keyPath: "opacity")
+        fade.values = [1, 1, 0]
+        fade.keyTimes = [0, 0.45, 1]
+        let group = CAAnimationGroup()
+        group.animations = [grow, thin, fade]
+        group.duration = 0.28
+        group.timingFunction = CAMediaTimingFunction(name: .easeOut)
+
+        CATransaction.begin()
+        CATransaction.setCompletionBlock { lines.removeFromSuperlayer() }
+        burstLayer.addSublayer(lines)
+        lines.add(group, forKey: "burst")
         CATransaction.commit()
     }
 

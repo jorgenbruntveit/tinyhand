@@ -19,10 +19,12 @@ struct PointerStyle: Hashable {
     static let coral = PointerStyle("coral")
     static let plush = PointerStyle("plush")
     static let robot = PointerStyle("robot")
+    static let outline = PointerStyle("outline")
     static let laser = PointerStyle("laser")
 
     private static let builtIn: [(id: String, title: String, ink: CGColor)] = [
         ("lavender", "Lavender toy", Ink.purple),
+        ("outline", "Cartoon", Ink.red),
         ("glove", "Cursor glove", Ink.purple),
         ("coral", "Coral vinyl", Ink.red),
         ("plush", "Plush", Ink.hex(0x2F86F0)),
@@ -72,7 +74,7 @@ struct PointerStyle: Hashable {
         builtInHands + customHands + [.laser]
     }
 
-    static let defaultPinned: [PointerStyle] = [.lavender, .glove, .coral, .plush, .robot, .laser]
+    static let defaultPinned: [PointerStyle] = [.lavender, .outline, .glove, .coral, .plush, .robot, .laser]
 
     var isCustom: Bool {
         CustomHands.hand(rawValue) != nil

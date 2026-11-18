@@ -78,6 +78,9 @@ final class OverlayController {
             }
             self.armView.press()
             self.armView.held = true
+            if Preferences.tapBurst {
+                self.armView.burst()
+            }
             self.tapSound.play()
             self.toolbar.hideHint()
             self.downPoint = self.localMouse()
@@ -95,6 +98,9 @@ final class OverlayController {
             self?.noteButtonEvent()
         }
         inputTap.onInteractDown = { [weak self] in
+            if let self = self, Preferences.tapBurst, !self.normalCursor {
+                self.armView.burst()
+            }
             self?.armView.press()
             self?.armView.held = true
             self?.noteButtonEvent()

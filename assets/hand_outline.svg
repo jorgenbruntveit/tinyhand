@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <defs>
+    <g id="palm">
+      <rect x="404" y="136" width="126" height="440" rx="63"/>
+      <path d="M392 470 C392 430 430 404 480 404 L640 404 C700 404 730 450 730 520 L730 600 C730 670 690 712 620 712 L470 712 C410 712 372 672 372 610 Z"/>
+      <circle cx="580" cy="436" r="58"/>
+      <circle cx="648" cy="446" r="54"/>
+      <circle cx="700" cy="486" r="48"/>
+    </g>
+  </defs>
+  <rect x="506" y="740" width="82" height="740" rx="41" fill="#141414"/>
+  <use href="#palm" fill="#141414" stroke="#141414" stroke-width="48" stroke-linejoin="round"/>
+  <use href="#palm" fill="#FFFFFF"/>
+  <!-- thumb, leaning in against the left side of the hand -->
+  <path d="M398 470 C350 470 318 510 322 562 C326 616 360 656 410 664 C440 668 456 646 452 618 C448 590 436 560 438 530 C440 492 430 470 398 470 Z"
+        fill="#FFFFFF" stroke="#141414" stroke-width="24" stroke-linejoin="round"/>
+  <g fill="none" stroke="#141414" stroke-linecap="round">
+    <path d="M530 448 C532 476 532 500 528 522" stroke-width="22"/>
+    <path d="M614 430 C618 446 618 460 614 474" stroke-width="20"/>
+    <path d="M676 458 C680 472 680 484 675 496" stroke-width="20"/>
+    <path d="M572 586 C578 616 580 640 578 664" stroke-width="15"/>
+    <path d="M630 586 C634 616 634 640 632 664" stroke-width="15"/>
+  </g>
+  <rect x="396" y="690" width="320" height="112" rx="46" fill="#FFFFFF" stroke="#141414" stroke-width="24"/>
+  <path d="M420 738 L692 738" fill="none" stroke="#141414" stroke-width="14" stroke-linecap="round"/>
+</svg>

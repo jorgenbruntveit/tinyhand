@@ -26,6 +26,7 @@ struct PointerStyle: Hashable {
         ("lavender", "Lavender toy", Ink.purple),
         ("outline", "Cartoon", Ink.red),
         ("catpaw", "Cat paw", Ink.hex(0xF0561D)),
+        ("middle", "Middle finger", Ink.red),
         ("glove", "Cursor glove", Ink.purple),
         ("coral", "Coral vinyl", Ink.red),
         ("plush", "Plush", Ink.hex(0x2F86F0)),

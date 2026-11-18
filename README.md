@@ -34,7 +34,8 @@ Open `TinyHand.dmg`, drag TinyHand to Applications and allow **Accessibility** w
 ### Pointer mode
 
 In **Settings → General → Clicks**, set **When the pointer is on** to **Work as usual** to use the
-hand as your everyday cursor. Clicks, drags and scrolls reach your apps as normal. Hold **⌥** to tap
+hand as your everyday cursor. Clicks, drags and scrolls reach your apps as normal, and the hand stays over
+the menu bar and menus, right-click ones included. Hold **⌥** to tap
 and draw, and let go to get normal clicks back. Double-tap **⇧** to stay in taps until you double-tap
 again. In this mode Esc doesn't turn the pointer off, and the pointer comes back after sleep, a lock
 or Settings. Turn on **Turn the pointer on when TinyHand opens** to have the hand from login.

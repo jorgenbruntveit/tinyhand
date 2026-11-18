@@ -93,6 +93,9 @@ final class OverlayController {
             self?.noteButtonEvent()
         }
         inputTap.onInteractDown = { [weak self] in
+            if let self = self, Preferences.clickSound, !self.normalCursor {
+                self.tapSound.play()
+            }
             self?.armView.press()
             self?.armView.held = true
             self?.noteButtonEvent()
@@ -142,6 +145,7 @@ final class OverlayController {
             }
             self?.armView.updateInkColor()
             self?.tapSound.load(Preferences.tapSound)
+            self?.tapSound.setVolume(Float(Preferences.tapVolume))
             if let self = self, self.armView.style != PointerStyle.saved {
                 self.pick(PointerStyle.saved)
             }

@@ -118,9 +118,31 @@ def squeak():
     shape = np.sin(np.pi * np.minimum(1, x / x[-1]))
     return (np.sin(phase) + 0.3 * np.sin(2 * phase)) * shape * np.exp(-x / 0.09)
 
+def slap():
+    x = t(0.16)
+    hit = bandpass(noise(len(x), 9), 400, 6500) * env(x, 0.0003, 0.012)
+    k = int(RATE * 0.006)
+    echo = np.zeros(len(x))
+    echo[k:] = bandpass(noise(len(x) - k, 10), 900, 5000) * env(x[: len(x) - k], 0.0003, 0.02) * 0.45
+    body = np.sin(2 * np.pi * 190 * x) * env(x, 0.0008, 0.03)
+    return hit + echo + 0.5 * body
+
+def glass():
+    x = t(0.45)
+    partials = [(2093, 1.0, 0.16), (5280, 0.5, 0.09), (8620, 0.25, 0.05)]
+    ring = sum(a * np.sin(2 * np.pi * f * x) * np.exp(-x / d) for f, a, d in partials)
+    strike = bandpass(noise(len(x), 11), 4000, 12000) * env(x, 0.0001, 0.0015) * 0.6
+    return ring * env(x, 0.0004, 1) + strike
+
+def fingertip():
+    x = t(0.07)
+    thump = np.sin(sweep(260 - 90 * x / x[-1])) * env(x, 0.0006, 0.014)
+    skin = bandpass(noise(len(x), 12), 500, 2500) * env(x, 0.0003, 0.006) * 0.7
+    return thump + skin
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    sounds = [click, tock, clack, typewriter, snap, wood, pop, boop, blip, coin, pew, squeak, quack, chirp]
+    sounds = [click, tock, clack, typewriter, snap, wood, pop, boop, blip, coin, pew, squeak, quack, chirp, slap, glass, fingertip]
     for name, fn in [(fn.__name__, fn) for fn in sounds]:
         save(name, fn())
     print("wrote", sorted(os.listdir(OUT)))

@@ -2,7 +2,7 @@ import AppKit
 import AVFoundation
 
 enum TapSoundChoice: String, CaseIterable {
-    case thock, click, tock, clack, typewriter, snap, wood, pop, boop, blip, coin, pew, squeak, quack, chirp
+    case thock, click, tock, clack, typewriter, snap, wood, pop, boop, blip, coin, pew, squeak, quack, chirp, slap, glass, fingertip
 
     var title: String {
         switch self {
@@ -21,6 +21,9 @@ enum TapSoundChoice: String, CaseIterable {
         case .squeak: return "Squeak"
         case .quack: return "Quack"
         case .chirp: return "Chirp"
+        case .slap: return "Slap"
+        case .glass: return "Glass"
+        case .fingertip: return "Fingertip"
         }
     }
 }
@@ -39,6 +42,7 @@ final class TapSound {
 
     // Touched only on `queue`.
     private var choice: TapSoundChoice
+    private var volume = Float(Preferences.tapVolume)
     private var engine: AVAudioEngine?
     private var nodes: [AVAudioPlayerNode] = []
     private var next = 0
@@ -64,6 +68,13 @@ final class TapSound {
     func load(_ choice: TapSoundChoice) {
         queue.async { [weak self] in
             self?.choice = choice
+        }
+    }
+
+    func setVolume(_ value: Float) {
+        queue.async { [weak self] in
+            self?.volume = value
+            self?.engine?.mainMixerNode.outputVolume = value
         }
     }
 
@@ -144,6 +155,7 @@ final class TapSound {
                 self.teardown()
             }
         }
+        engine.mainMixerNode.outputVolume = volume
         engine.prepare()
         do {
             try engine.start()

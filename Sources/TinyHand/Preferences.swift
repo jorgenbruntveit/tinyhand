@@ -119,6 +119,17 @@ enum Preferences {
         set { set(newValue.rawValue, "tapSound") }
     }
 
+    static var tapVolume: Double {
+        get { defaults.object(forKey: "tapVolume") as? Double ?? 1 }
+        set { set(newValue, "tapVolume") }
+    }
+
+    /// Also play the tap sound for clicks that reach the app while the hand is showing.
+    static var clickSound: Bool {
+        get { defaults.object(forKey: "clickSound") as? Bool ?? true }
+        set { set(newValue, "clickSound") }
+    }
+
     static var laserSound: Bool {
         get { defaults.object(forKey: "sound.laser") as? Bool ?? false }
         set { set(newValue, "sound.laser") }
@@ -186,7 +197,7 @@ enum Preferences {
 
     static func resetAll() {
         for key in ["shortcut.toggle", "shortcut.clear", "pointerSize", "showShadow", "fadeSeconds",
-                    "sound.hands", "sound.laser", "interactKey", "interactKeepsHand", "doubleShiftClickThrough", "pinnedStyles", "pointerStyle",
+                    "sound.hands", "sound.laser", "tapVolume", "clickSound", "interactKey", "interactKeepsHand", "doubleShiftClickThrough", "pinnedStyles", "pointerStyle",
                     "inkChoice", "showInkButton", "showToolbar", "tapSound"] {
             defaults.removeObject(forKey: key)
         }

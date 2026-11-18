@@ -99,6 +99,18 @@ enum Preferences {
         set { set(Double(newValue), "pointerSize") }
     }
 
+    /// A short stick that fades out a little way below the hand, instead of one that reaches the screen edge.
+    static var fadingStick: Bool {
+        get { defaults.bool(forKey: "fadingStick") }
+        set { set(newValue, "fadingStick") }
+    }
+
+    /// Short lines burst out from the fingertip on each tap.
+    static var tapBurst: Bool {
+        get { defaults.object(forKey: "tapBurst") as? Bool ?? true }
+        set { set(newValue, "tapBurst") }
+    }
+
     static var showShadow: Bool {
         get { defaults.object(forKey: "showShadow") as? Bool ?? true }
         set { set(newValue, "showShadow") }
@@ -185,7 +197,7 @@ enum Preferences {
     }
 
     static func resetAll() {
-        for key in ["shortcut.toggle", "shortcut.clear", "pointerSize", "showShadow", "fadeSeconds",
+        for key in ["shortcut.toggle", "shortcut.clear", "pointerSize", "fadingStick", "tapBurst", "showShadow", "fadeSeconds",
                     "sound.hands", "sound.laser", "interactKey", "interactKeepsHand", "doubleShiftClickThrough", "pinnedStyles", "pointerStyle",
                     "inkChoice", "showInkButton", "showToolbar", "tapSound"] {
             defaults.removeObject(forKey: key)

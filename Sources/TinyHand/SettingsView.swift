@@ -966,6 +966,20 @@ private struct AppearancePage: View {
                 Toggle("", isOn: model.binding({ Preferences.showShadow }, { Preferences.showShadow = $0 }))
                     .toggleStyle(.switch).labelsHidden().focusable(false)
             }
+            Row("Stick", detail: Preferences.fadingStick ? "A short stick that fades out below the hand." : "The stick reaches the edge of the screen.") {
+                Picker("", selection: model.binding({ Preferences.fadingStick }, { Preferences.fadingStick = $0 })) {
+                    Text("Full length").tag(false)
+                    Text("Short, fading").tag(true)
+                }
+                .labelsHidden()
+                .pickerStyle(.menu)
+                .fixedSize()
+                .focusable(false)
+            }
+            Row("Burst on each tap", detail: "Short lines in the ink colour flash out from the fingertip.") {
+                Toggle("", isOn: model.binding({ Preferences.tapBurst }, { Preferences.tapBurst = $0 }))
+                    .toggleStyle(.switch).labelsHidden().focusable(false)
+            }
         }
     }
 }

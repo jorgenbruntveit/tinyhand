@@ -5,7 +5,8 @@ enum RenderTest {
         _ = NSApplication.shared
 
         let panel = CGSize(width: 420, height: 560)
-        let styles = PointerStyle.allCases
+        let only = ProcessInfo.processInfo.environment["TH_STYLES"]?.split(separator: ",").map(String.init)
+        let styles = only.map { ids in PointerStyle.allCases.filter { ids.contains($0.rawValue) } } ?? PointerStyle.allCases
         let target = CGPoint(x: panel.width - 230, y: 380)
         let w = Int(panel.width) * styles.count
         let h = Int(panel.height)

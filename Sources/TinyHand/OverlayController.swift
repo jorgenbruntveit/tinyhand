@@ -96,10 +96,10 @@ final class OverlayController {
             self?.noteButtonEvent()
         }
         inputTap.onInteractDown = { [weak self] in
+            self?.armView.press()
             if let self = self, Preferences.tapBurst, !self.normalCursor {
                 self.armView.burst()
             }
-            self?.armView.press()
             self?.armView.held = true
             self?.noteButtonEvent()
         }

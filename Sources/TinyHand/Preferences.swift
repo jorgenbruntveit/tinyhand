@@ -145,7 +145,7 @@ enum Preferences {
     }
 
     static var showToolbar: Bool {
-        get { defaults.object(forKey: "showToolbar") as? Bool ?? true }
+        get { defaults.object(forKey: "showToolbar") as? Bool ?? false }
         set { set(newValue, "showToolbar") }
     }
 

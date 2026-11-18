@@ -607,7 +607,7 @@ private struct PointersPage: View {
             Card(title: "Toolbar") {
                 Row("Show the toolbar", detail: Preferences.showToolbar
                     ? "Pops up when the pointer turns on and near the bottom of the screen."
-                    : "Stays hidden. Press Esc to exit, or use the menu bar.") {
+                    : "Stays hidden. Right-click the menu bar icon to pick a hand, ink colour or sound.") {
                     Toggle("", isOn: model.binding({ Preferences.showToolbar }, { Preferences.showToolbar = $0 }))
                         .toggleStyle(.switch).labelsHidden().focusable(false)
                 }

@@ -24,15 +24,15 @@ Open `TinyHand.dmg`, drag TinyHand to Applications and allow **Accessibility** w
 | | |
 |---|---|
 | Click the menu bar icon, or **⌃⌥H** | Turn the pointer on or off |
-| Right-click the menu bar icon | Menu and Settings |
+| Right-click the menu bar icon | Pick a hand, ink colour or tap sound, and open Settings |
 | Click | Tap (nothing underneath gets clicked) |
 | Hold and drag | Draw on the screen |
 | Hold **⌘** while drawing | Add an arrowhead to the end of the line |
 | **⌃⌥X** | Clear the drawing |
 | **Esc** | Clear everything and turn the pointer off |
 
-While the pointer is on, a small toolbar at the bottom of the screen lets you pick one of
-36 hands or a laser dot, mute the tap sound, or exit.
+You can also turn on a small toolbar at the bottom of the screen in **Settings → Pointers**. It
+lets you pick one of 36 hands or a laser dot, mute the tap sound, or exit while you present.
 
 ## Automation
 

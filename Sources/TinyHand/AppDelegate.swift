@@ -13,6 +13,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var toggleItem: NSMenuItem?
     private var clearItem: NSMenuItem?
     private var soundItem: NSMenuItem?
+    private let pointerMenu = NSMenu()
+    private let inkMenu = NSMenu()
     private var toggleHotKey: UInt32?
     private var clearHotKey: UInt32?
     private lazy var automation = Automation(overlay: overlay)
@@ -89,8 +91,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         toggleItem = toggle
         clearItem = clear
         soundItem = sound
+        let pointer = NSMenuItem(title: "Pointer", action: nil, keyEquivalent: "")
+        pointer.submenu = pointerMenu
+        let ink = NSMenuItem(title: "Ink Colour", action: nil, keyEquivalent: "")
+        ink.submenu = inkMenu
         menu.addItem(toggle)
         menu.addItem(clear)
+        menu.addItem(.separator())
+        menu.addItem(pointer)
+        menu.addItem(ink)
         menu.addItem(sound)
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ","))
@@ -146,7 +155,63 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         toggleItem?.title = "\(on ? "Turn Pointer Off" : "Turn Pointer On")    \(Preferences.toggleShortcut.display)"
         clearItem?.title = "Clear Drawing    \(Preferences.clearShortcut.display)"
         soundItem?.state = overlay.soundOn ? .on : .off
+        refreshPointerMenu()
+        refreshInkMenu()
         permissionItem?.isHidden = AXIsProcessTrusted()
+    }
+
+    private func refreshPointerMenu() {
+        pointerMenu.removeAllItems()
+        let groups = [PointerStyle.builtInHands, PointerStyle.customHands, [PointerStyle.laser]].filter { !$0.isEmpty }
+        for (i, group) in groups.enumerated() {
+            if i > 0 {
+                pointerMenu.addItem(.separator())
+            }
+            for style in group {
+                let item = NSMenuItem(title: style.title, action: #selector(pickStyle(_:)), keyEquivalent: "")
+                item.target = self
+                item.representedObject = style.rawValue
+                item.state = style == overlay.style ? .on : .off
+                if let thumb = style.assetName.flatMap(HandAsset.cachedThumbnail)?.copy() as? NSImage {
+                    thumb.size = NSSize(width: 18, height: 18)
+                    item.image = thumb
+                } else if style == .laser {
+                    item.image = NSImage(systemSymbolName: "circle.fill", accessibilityDescription: nil)
+                }
+                pointerMenu.addItem(item)
+            }
+        }
+    }
+
+    private func refreshInkMenu() {
+        inkMenu.removeAllItems()
+        for choice in InkChoice.allCases {
+            let item = NSMenuItem(title: choice.title, action: #selector(pickInk(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = choice.rawValue
+            item.state = choice == Preferences.inkChoice ? .on : .off
+            item.image = NSImage(size: NSSize(width: 12, height: 12), flipped: false) { rect in
+                NSColor(cgColor: choice.resolved(for: self.overlay.style))?.setFill()
+                NSBezierPath(ovalIn: rect.insetBy(dx: 1, dy: 1)).fill()
+                return true
+            }
+            inkMenu.addItem(item)
+        }
+    }
+
+    @objc private func pickStyle(_ sender: NSMenuItem) {
+        guard let raw = sender.representedObject as? String, let style = PointerStyle(rawValue: raw) else {
+            return
+        }
+        overlay.pick(style)
+        automation.writeState()
+    }
+
+    @objc private func pickInk(_ sender: NSMenuItem) {
+        guard let raw = sender.representedObject as? String, let choice = InkChoice(rawValue: raw) else {
+            return
+        }
+        Preferences.inkChoice = choice
     }
 
     private func apply(_ s: Shortcut, isToggle: Bool) -> Bool {

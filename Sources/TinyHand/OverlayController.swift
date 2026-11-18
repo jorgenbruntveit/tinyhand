@@ -98,6 +98,7 @@ final class OverlayController {
             self?.noteButtonEvent()
         }
         inputTap.onInteractDown = { [weak self] in
+            self?.armView.press()
             if let self = self, !self.normalCursor {
                 if Preferences.tapBurst {
                     self.armView.burst()
@@ -106,7 +107,6 @@ final class OverlayController {
                     self.tapSound.play()
                 }
             }
-            self?.armView.press()
             self?.armView.held = true
             self?.noteButtonEvent()
         }
